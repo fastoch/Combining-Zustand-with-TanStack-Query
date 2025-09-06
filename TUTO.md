@@ -215,15 +215,73 @@ Currently, we don't have any client state, only server state provided by `useQue
 The thing that wil provide client state is our `filters` parameter that is passed to `getUsers`.  
 The state of those filters (`limit` and `page`) lives on the client, this is the only client state that we have.  
 
-So the right choice here is to use Zustand for those filters, and let TanStack Query handle the server state (the `users` data that is returned from our fake API).  
-
+So the right choice here is to use Zustand for those filters, and let TanStack Query handle the server state 
+(the `users` data that is returned from our fake API).  
 
 ## Updating our userStore
 
 Let's update that store to make use of client state instead of server state.  
 
 - first, we need to remove everything that has to do with `users`
-- 
+- then, in `/src/api/user.ts`, we need to export `GetUsersFilters` so we can use it in `userStore.ts`
 
----
-@14/20
+Here's how our userStore looks like now:
+```ts
+import { create } from 'zustand'
+import type { GetUsersFilters } from '../api/user'
+
+type UserStore = {
+  filters?: GetUsersFilters;
+  setFilters: (filters?: GetUsersFilters) => void;
+}
+
+export const useUserStore = create<UserStore>((set) => ({
+  filters: undefined,
+  setFilters: (filters) => set({ filters }),
+}))
+```
+
+## Updating the App component
+
+- we can remove the `useEffect`
+
+Here's the new version of `App.tsx`:
+```tsx
+import { useQuery } from '@tanstack/react-query'
+import { getUsers } from './api/user'
+import './App.css'
+import { useUserStore } from './states/userStore'
+
+export default function App() {
+  // ZUSTAND part
+  const { filters } = useUserStore()
+
+  // TANSTACK QUERY part
+  const { data } = useQuery({
+    queryKey:['users', filters], 
+    queryFn: () => getUsers(filters), 
+  })
+
+  return (
+    <div className="user-list-container">
+      {data?.map(user => (
+        <div key={user.id} className="user-item">{user.name}</div>
+      ))}
+    </div>
+  )
+}
+```
+
+## Conclusion
+
+And now we have combined TanStack Query with Zustand in an efficient way, using both libraries 
+for what they're good at instead of having them overlap with each other.  
+
+We've used **Zustand** for managing the state of `filters` on the client-side.  
+Those filters will only live on the client, which will be able to update the filters by setting the page or the limit.  
+
+When the filters state changes, their new state is going to be sent over to **TanStack** Query.  
+And then, **TanStack** Query is going to use the new filters to actually get a new list of users (refetch).  
+
+The new filtered list of users will be stored into `data`, and we will see it displayed in the browser 
+thanks to the `map` function in the JSX part of the App component.

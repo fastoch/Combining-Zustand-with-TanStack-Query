@@ -1,6 +1,6 @@
 import type { User } from '../types/user'
 
-type GetUsersFilters = {
+export type GetUsersFilters = {
   limit: number;
   page: number;
 }
