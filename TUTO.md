@@ -126,7 +126,52 @@ export const useUserStore = create<UserStore>((set) => ({
 
 ## Using our store in the App component
 
+### Important note
 
+The `onSuccess` callback has been deprecated in TanStack Query for `useQuery`.  
+It was removed as an option in the latest major version (v5), along with `onError` and `onSettled`.  
+The maintainers recommend handling side effects using React's standard `useEffect` or other state management solutions.  
+**However**, `onSuccess` and related callbacks remain supported for `useMutation`.
+
+---
+
+### New version of `App.tsx`
+
+- We need to import `useUserStore` and `useEffect`
+- we declare our state: `const { users, setUsers } = useUserStore()`
+- we use `useEffect` instead of `onSuccess` to set the `users` state to whatever `data` is returned by `getUsers`
+- finally, we replace `data` with `users` in the return statement (`.map(...)`)
+
+```tsx
+import { useQuery } from '@tanstack/react-query'
+import { getUsers } from './api/user'
+import './App.css'
+import { useUserStore } from './states/userStore'
+import { useEffect } from 'react'
+
+export default function App() {
+  const { users, setUsers } = useUserStore()
+
+  const { data } = useQuery({
+    queryKey:['users'], 
+    queryFn: () => getUsers(), // expects parameters (optional filters), hence the anonymous function 
+  })
+
+  useEffect(() => {
+    if (data) {
+      setUsers(data)
+    }
+  }, [data])
+
+  return (
+    <div className="user-list-container">
+      {users?.map(user => (
+        <div key={user.id} className="user-item">{user.name}</div>
+      ))}
+    </div>
+  )
+}
+```
 
 ---
 
