@@ -140,7 +140,8 @@ The maintainers recommend handling side effects using React's standard `useEffec
 - We need to import `useUserStore` and `useEffect`
 - we declare our state: `const { users, setUsers } = useUserStore()`
 - we use `useEffect` instead of `onSuccess` to set the `users` state to whatever `data` is returned by `getUsers`
-- finally, we replace `data` with `users` in the return statement (`.map(...)`)
+- finally, we replace `data` with `users` in the return statement (`.map(...)`) since `data` data is now into `users`
+- we can remove the question mark from `users.map` because `users` cannot be undefined
 
 ```tsx
 import { useQuery } from '@tanstack/react-query'
@@ -165,13 +166,33 @@ export default function App() {
 
   return (
     <div className="user-list-container">
-      {users?.map(user => (
+      {users.map(user => (
         <div key={user.id} className="user-item">{user.name}</div>
       ))}
     </div>
   )
 }
 ```
+
+We have now successfully connected TanStack Query to Zustand through a `useEffect` hook.  
+And we're using the actual values from the Zustand store (`useUserStore`) to render our UI. 
+
+---
+
+## Why is this the wrong way of combining Zustand and TanStack Query?
+
+Although what we've done is working fine, it's actually inefficient, because we've duplicated a lot of code
+and we've added unnecessary complexity to our app.  
+
+First of all, our array of users is stored in 2 places: in `users` and in `data`.  
+But TanStack Query is not just a data fetching library, it's an "**asynchronous state management solution**".  
+
+Every time that the query function `queryFn: () => getUsers()` is called, whatever it returns will be 
+stored in the TanStack query **cache**. So if we try to access it from another component, it will return 
+the cached version instead of making a **fetch** from scratch once again.  
+
+In the way we've done things, we've just added complexity for no reason, and we could have achieved the same 
+result without ever using Zustand.
 
 ---
 
@@ -180,4 +201,4 @@ export default function App() {
 
 
 ---
-@4/20
+@10/20

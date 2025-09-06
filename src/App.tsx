@@ -20,7 +20,7 @@ export default function App() {
 
   return (
     <div className="user-list-container">
-      {users?.map(user => (
+      {users.map(user => (
         <div key={user.id} className="user-item">{user.name}</div>
       ))}
     </div>

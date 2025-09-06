@@ -16,5 +16,7 @@ export async function getUsers(filters?: GetUsersFilters) {
     { id: 3, name: 'Bob' },
     { id: 4, name: 'Alice' },
     { id: 5, name: 'Eve' },
+    { id: 6, name: 'Roger' },
+    { id: 7, name: 'Devon' },
   ] as User[]
 }
