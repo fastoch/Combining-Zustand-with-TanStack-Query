@@ -198,7 +198,27 @@ result without ever using Zustand.
 
 # Adding Zustand into the mix the RIGHT way
 
+## Server state vs. Client state
+
+TanStack Query is a **server** state management solution, while Zustand is a **client** state management solution.  
+- "Client" means **frontend**, that's the Web browser where our React app is running
+- "Server" means **backend**, the part that communicates with the database  
+
+In our case, the backend data is provided by the `/src/api/user.ts` file.  
+It's giving the users data to the App component.  
+
+What we've done so far is putting server state (what the query returns) inside Zustand, which is why it's thew wrong way.  
+
+## What is client state in our case?
+
+Currently, we don't have any client state, only server state provided by `useQuery`.  
+The thing that wil provide client state is our `filters` parameter that is passed to `getUsers`.  
+The state of those filters (`limit` and `page`) lives on the client, this is the only client state that we have.  
+
+So the right choice here is to use Zustand for those filters, and let TanStack Query handle the server state (the `users` data that is returned from our fake API).  
+
+
 
 
 ---
-@10/20
+@14/20
