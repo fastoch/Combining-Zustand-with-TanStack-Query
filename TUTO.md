@@ -218,7 +218,12 @@ The state of those filters (`limit` and `page`) lives on the client, this is the
 So the right choice here is to use Zustand for those filters, and let TanStack Query handle the server state (the `users` data that is returned from our fake API).  
 
 
+## Updating our userStore
 
+Let's update that store to make use of client state instead of server state.  
+
+- first, we need to remove everything that has to do with `users`
+- 
 
 ---
 @14/20
