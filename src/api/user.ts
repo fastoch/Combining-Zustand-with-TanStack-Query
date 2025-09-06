@@ -10,5 +10,11 @@ export async function getUsers(filters?: GetUsersFilters) {
   console.log(`active filters: ${JSON.stringify(filters)}`)
 
   await new Promise((resolve) => setTimeout(resolve, 1000))
-  return [{ id: 1, name: 'John' }, { id: 2, name: 'Jane' }] as User[]
+  return [
+    { id: 1, name: 'John' }, 
+    { id: 2, name: 'Jane' },
+    { id: 3, name: 'Bob' },
+    { id: 4, name: 'Alice' },
+    { id: 5, name: 'Eve' },
+  ] as User[]
 }

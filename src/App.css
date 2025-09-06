@@ -40,3 +40,16 @@
 .read-the-docs {
   color: #888;
 }
+
+.user-list-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.user-item {
+  font-size: 1.5rem;
+  margin: 0.5rem;
+}

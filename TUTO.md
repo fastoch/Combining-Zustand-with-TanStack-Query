@@ -64,6 +64,7 @@ The type `User` is declared in `/src/types/user.ts`
 ```tsx
 import { useQuery } from '@tanstack/react-query'
 import { getUsers } from './api/user'
+import './App.css'
 
 export default function App() {
   const { data } = useQuery({
@@ -72,12 +73,36 @@ export default function App() {
   })
 
   return (
-    <div>
-      {data?.map(user => <div key={user.id}>{user.name}</div>)}
+    <div className="user-list-container">
+      {data?.map(user => (
+        <div key={user.id} className="user-item">{user.name}</div>
+      ))}
     </div>
   )
 }
 ```
 
+Now we have TanStack Query, and we're simulating data fetching with the `getUsers` function.  
+But how to add Zustand into the mix?
+
 ---
-@3/20
+
+# Adding Zustand into the mix the WRONG way
+
+In the `/src/states` folder, we create a `userStore.ts` file.  
+We're going to create all of our Zustand states for our users inside this store.  
+
+Since we're using TypeScript, we need to start by defining the type of our store.
+
+## Defining the type of our store
+
+
+
+---
+
+# Adding Zustand into the mix the RIGHT way
+
+
+
+---
+@4/20
