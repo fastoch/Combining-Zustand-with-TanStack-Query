@@ -96,6 +96,36 @@ Since we're using TypeScript, we need to start by defining the type of our store
 
 ## Defining the type of our store
 
+In `userStore.ts`:
+```ts
+import type { User } from '../types/user'
+
+type UserStore = {
+  users: User[];
+  setUsers: (users: User[]) => void;
+}
+```
+
+## Implementing our store
+
+In `userStore.ts`:
+```tsx
+import type { User } from '../types/user'
+import { create } from 'zustand'
+
+type UserStore = {
+  users: User[];
+  setUsers: (users: User[]) => void;
+}
+
+export const useUserStore = create<UserStore>((set) => ({
+  users: [],
+  setUsers: (users) => set({ users }),
+}))
+```
+
+## Using our store in the App component
+
 
 
 ---
